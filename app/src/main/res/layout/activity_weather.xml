@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/dark_blue"
+    android:overScrollMode="never"
+    tools:context=".MainActivity">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/vTvCityName"
+                style="@style/DefaultBoldText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_14"
+                android:gravity="center"
+                tools:text="Minsk" />
+
+            <ImageView
+                android:id="@+id/vIvWeatherCondition"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/dp_32"
+                tools:src="@drawable/ic_no_image" />
+
+            <TextView
+                style="@style/DefaultBoldText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_14"
+                android:layout_marginTop="@dimen/dp_14"
+                android:layout_marginEnd="@dimen/dp_14"
+                android:gravity="center"
+                android:textSize="@dimen/sp_48"
+                tools:text="+23 C" />
+
+            <TextView
+                android:id="@+id/vTvWeatherDescription"
+                style="@style/DefaultText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_14"
+                android:layout_marginEnd="@dimen/dp_14"
+                android:layout_marginBottom="@dimen/dp_14"
+                android:gravity="center"
+                tools:text="Overcast clouds" />
+
+            <include
+                layout="@layout/view_weather_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/vTvShowMore"
+                style="@style/DefaultBoldText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|bottom"
+                android:layout_marginTop="@dimen/dp_14"
+                android:layout_marginBottom="@dimen/dp_24"
+                android:background="@drawable/bg_rec_rounded_16"
+                android:elevation="@dimen/dp_2"
+                android:padding="@dimen/dp_12"
+                android:text="@string/show_more"
+                android:textSize="@dimen/sp_16" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <com.example.weather.utils.view.BottomSheetLayoutWithBackground
+        android:id="@+id/vFutureWeatherListBottomSheet"
+        app:collapsedHeight="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="@dimen/dp_18">
+
+        <include
+            layout="@layout/view_future_weather_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom" />
+
+    </com.example.weather.utils.view.BottomSheetLayoutWithBackground>
+
+</FrameLayout>
