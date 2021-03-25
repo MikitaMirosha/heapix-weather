@@ -5,7 +5,7 @@
     <string name="celsius">°C</string>
     <string name="hpa">hPa</string>
     <string name="percent">%</string>
-    <string name="mps">m/s</string>
+    <string name="mps">mps</string>
 
     <string name="feels_like">Feels like:</string>
     <string name="pressure">Pressure:</string>
@@ -13,6 +13,7 @@
     <string name="wind_speed">Wind speed:</string>
     <string name="sunrise">Sunrise:</string>
     <string name="sunset">Sunset:</string>
+    <string name="latest_update">Latest update:</string>
 
     <string name="show_more">Show more</string>
 

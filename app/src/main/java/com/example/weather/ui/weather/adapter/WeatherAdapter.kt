@@ -6,19 +6,20 @@ import com.example.weather.R
 import com.example.weather.base.adapters.BaseListAdapter
 import com.example.weather.base.adapters.BaseViewHolder
 import com.example.weather.net.responses.TotalWeatherResponse
+import com.example.weather.net.responses.WeatherListResponse
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
-class WeatherAdapter : BaseListAdapter<TotalWeatherResponse>() {
+class WeatherAdapter : BaseListAdapter<WeatherListResponse>() {
 
-    private val totalWeatherPublishSubject: PublishSubject<TotalWeatherResponse> =
+    private val totalWeatherPublishSubject: PublishSubject<WeatherListResponse> =
         PublishSubject.create()
-    val weatherItemClickObservable: Observable<TotalWeatherResponse> = totalWeatherPublishSubject
+    val weatherItemClickObservable: Observable<WeatherListResponse> = totalWeatherPublishSubject
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): BaseViewHolder<TotalWeatherResponse> {
+    ): BaseViewHolder<WeatherListResponse> {
         return WeatherViewHolder(
             LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_future_weather, parent, false),

@@ -181,4 +181,29 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_14"
+        android:layout_marginEnd="@dimen/dp_14"
+        android:layout_marginBottom="@dimen/dp_14"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/WeatherDescriptionText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLength="14"
+            android:text="@string/latest_update" />
+
+        <TextView
+            android:id="@+id/vTvDateTime"
+            style="@style/WeatherDescriptionText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_8"
+            tools:text="25.03 06:00" />
+
+    </LinearLayout>
+
 </LinearLayout>

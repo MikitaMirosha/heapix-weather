@@ -4,8 +4,8 @@ import android.os.Bundle
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.bumptech.glide.Glide
 import com.example.weather.R
-import com.example.weather.WeatherAppGlideModule
 import com.example.weather.base.BaseMvpActivity
+import com.example.weather.net.responses.WeatherListResponse
 import com.example.weather.ui.weather.adapter.WeatherAdapter
 import kotlinx.android.synthetic.main.activity_weather.*
 import kotlinx.android.synthetic.main.view_future_weather_list.*
@@ -38,6 +38,10 @@ class WeatherActivity : BaseMvpActivity(), WeatherView {
     private fun setupWeatherAdapter() {
         weatherAdapter = WeatherAdapter()
         vRvFutureWeatherList.adapter = weatherAdapter
+    }
+
+    override fun setupWeatherItems(weatherListResponse: MutableList<WeatherListResponse>) {
+        weatherAdapter.setItems(weatherListResponse)
     }
 
     override fun setupCityName(name: String) {
@@ -81,6 +85,10 @@ class WeatherActivity : BaseMvpActivity(), WeatherView {
 
     override fun setupSunset(sunset: String) {
         vTvSunset.text = sunset
+    }
+
+    override fun setupDateTime(dateTime: Long) {
+        vTvDateTime.text = dateTime.toString()
     }
 
     override fun toggleFutureWeatherList() = vFutureWeatherListBottomSheet.toggle()

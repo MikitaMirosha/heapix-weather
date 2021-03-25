@@ -29,19 +29,11 @@
                 android:textSize="@dimen/sp_22"
                 tools:text="Minsk" />
 
-            <ImageView
-                android:id="@+id/vIvWeatherConditionIcon"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/dp_32"
-                tools:src="@drawable/ic_no_image" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dp_14"
-                android:layout_marginTop="@dimen/dp_14"
+                android:layout_marginTop="@dimen/dp_28"
                 android:layout_marginEnd="@dimen/dp_14"
                 android:gravity="center"
                 android:orientation="horizontal">
@@ -52,7 +44,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:textSize="@dimen/sp_48"
+                    android:textSize="@dimen/sp_36"
                     tools:text="23" />
 
                 <TextView
@@ -62,9 +54,16 @@
                     android:layout_marginStart="@dimen/dp_8"
                     android:gravity="center"
                     android:text="@string/celsius"
-                    android:textSize="@dimen/sp_48" />
+                    android:textSize="@dimen/sp_36" />
 
             </LinearLayout>
+
+            <ImageView
+                android:id="@+id/vIvWeatherConditionIcon"
+                android:layout_width="@dimen/dp_48"
+                android:layout_height="@dimen/dp_48"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/dp_14" />
 
             <TextView
                 android:id="@+id/vTvWeatherDescription"
@@ -74,13 +73,15 @@
                 android:layout_marginStart="@dimen/dp_14"
                 android:layout_marginEnd="@dimen/dp_14"
                 android:layout_marginBottom="@dimen/dp_14"
+                android:textSize="@dimen/sp_16"
                 android:gravity="center"
                 tools:text="Overcast clouds" />
 
             <include
                 layout="@layout/view_weather_description"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_14" />
 
             <View
                 android:layout_width="match_parent"
@@ -109,7 +110,7 @@
         android:id="@+id/vFutureWeatherListBottomSheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="@dimen/dp_18"
+        android:paddingTop="@dimen/dp_46"
         app:collapsedHeight="0dp">
 
         <include

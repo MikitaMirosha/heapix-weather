@@ -6,13 +6,12 @@ import com.example.weather.WeatherApp
 import com.example.weather.base.BaseMvpPresenter
 import com.example.weather.net.repo.WeatherRepo
 import com.example.weather.net.responses.TotalWeatherResponse
+import com.example.weather.net.responses.WeatherListResponse
+import com.example.weather.utils.extensions.convertKelvinToCelsius
+import com.example.weather.utils.extensions.convertPosixFormatToUtcTime
 import io.reactivex.Observable
-import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormat
 import org.kodein.di.instance
 import java.math.BigDecimal
-import java.math.RoundingMode
-
 
 @InjectViewState
 class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
@@ -21,22 +20,23 @@ class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
 
     private lateinit var totalWeatherResponse: TotalWeatherResponse
 
-    fun onCreate(weatherItemClickObservable: Observable<TotalWeatherResponse>) {
+    fun onCreate(weatherItemClickObservable: Observable<WeatherListResponse>) {
         getWeatherAndUpdateUi()
 
         setupOnWeatherItemClickListener(weatherItemClickObservable)
     }
 
     companion object {
-        private const val SCALE: Int = 1
-        private const val MILLISECONDS: Long = 1000L
-        private val ABSOLUTE_ZERO: BigDecimal = BigDecimal(273.15)
+        const val SCALE: Int = 1
+        const val MILLISECONDS: Long = 1000L
+        val ABSOLUTE_ZERO: BigDecimal = BigDecimal(273.15)
 
-        private const val INPUT_PATTERN: String = "yyyy-MM-dd'T'HH:mm:ss.sssZ"
-        private const val OUTPUT_PATTERN: String = "HH:mm"
+        const val OUTPUT_TIME_PATTERN: String = "HH:mm"
+        const val OUTPUT_DATE_TIME_PATTERN: String = "HH:mm  dd.MM"
+        const val INPUT_POSIX_PATTERN: String = "yyyy-MM-dd'T'HH:mm:ss.sssZ"
 
-        private const val BASE_ICON_URL: String = "http://openweathermap.org/img/w/"
-        private const val PNG_FORMAT: String = ".png"
+        const val PNG_FORMAT: String = ".png"
+        const val BASE_ICON_URL: String = "https://openweathermap.org/img/w/"
     }
 
     private fun getWeatherAndUpdateUi() {
@@ -56,14 +56,14 @@ class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
         )
     }
 
-    private fun setupOnWeatherItemClickListener(weatherItemClickObservable: Observable<TotalWeatherResponse>) {
+    private fun setupOnWeatherItemClickListener(weatherItemClickObservable: Observable<WeatherListResponse>) {
         addDisposable(
             weatherItemClickObservable
                 .subscribeOn(schedulers.io())
                 .observeOn(schedulers.ui())
                 .subscribe(
                     {
-
+                        getWeatherAndUpdateUi()
                     }, {
                         Log.e("TAG", it.toString())
                     }
@@ -72,6 +72,8 @@ class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
     }
 
     private fun setupWeatherData(totalWeatherResponse: TotalWeatherResponse) {
+        setupWeatherItems(totalWeatherResponse)
+
         setupCityName(totalWeatherResponse)
         setupWeatherConditionIcon(totalWeatherResponse)
         setupTemperature(totalWeatherResponse)
@@ -83,6 +85,11 @@ class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
         setupWindSpeed()
         setupSunrise(totalWeatherResponse)
         setupSunset(totalWeatherResponse)
+        setupDateTime(totalWeatherResponse)
+    }
+
+    private fun setupWeatherItems(totalWeatherResponse: TotalWeatherResponse) {
+        viewState.setupWeatherItems(totalWeatherResponse.list)
     }
 
     private fun setupCityName(totalWeatherResponse: TotalWeatherResponse) {
@@ -99,7 +106,9 @@ class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
                     icon.let {
                         it?.let { icon ->
                             viewState.setupWeatherConditionIcon(
-                                "http://openweathermap.org/img/w/${icon}.png"
+                                BASE_ICON_URL
+                                    .plus(icon)
+                                    .plus(PNG_FORMAT)
                             )
                         }
                     }
@@ -186,32 +195,23 @@ class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
 
     private fun setupSunrise(totalWeatherResponse: TotalWeatherResponse) {
         totalWeatherResponse.city?.sunrise
-            ?.let { convertPosixToUtc(it) }
+            ?.let { convertPosixFormatToUtcTime(it) }
             ?.let { viewState.setupSunrise(it) }
     }
 
     private fun setupSunset(totalWeatherResponse: TotalWeatherResponse) {
         totalWeatherResponse.city?.sunset
-            ?.let { convertPosixToUtc(it) }
+            ?.let { convertPosixFormatToUtcTime(it) }
             ?.let { viewState.setupSunset(it) }
     }
 
-    private fun convertKelvinToCelsius(kelvinDegrees: BigDecimal): BigDecimal {
-        return kelvinDegrees
-            .minus(ABSOLUTE_ZERO)
-            .setScale(SCALE, RoundingMode.UP)
-    }
-
-    private fun convertPosixToUtc(posixTime: Long): String {
-        return DateTimeFormat
-            .forPattern(OUTPUT_PATTERN)
-            .print(
-                DateTimeFormat
-                    .forPattern(INPUT_PATTERN)
-                    .parseDateTime(DateTime(posixTime.times(MILLISECONDS)).toString())
-            )
+    private fun setupDateTime(totalWeatherResponse: TotalWeatherResponse) {
+//        totalWeatherResponse.list.map { weatherListResponse ->
+//            weatherListResponse.dt
+//                ?.let { convertPosixFormatToUtcDateTime(it) }
+//                ?.let { viewState.setupDateTime(it.toLong()) }
+//        }
     }
 
     fun toggleFutureWeatherList() = viewState.toggleFutureWeatherList()
-
 }
