@@ -1,7 +1,12 @@
 package com.example.weather.utils.preferences
 
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
+import com.example.weather.net.responses.TotalWeatherResponse
+import com.example.weather.utils.preferences.PreferencesUtils.Companion.getSharedPreferences
+import com.google.gson.Gson
+
 
 class PreferencesUtils {
 
@@ -11,8 +16,11 @@ class PreferencesUtils {
 
         private const val PREFERENCES = "PREFERENCES"
 
+
         const val DESCRIPTION = "DESCRIPTION"
-//        const val TARGET_CODE = "TARGET_CODE"
+        const val PRESSURE = "PRESSURE"
+
+        const val TOTAL_WEATHER_RESPONSE = "TOTAL_WEATHER_RESPONSE"
     }
 }
 
@@ -22,10 +30,17 @@ inline fun SharedPreferences.editMe(operation: (SharedPreferences.Editor) -> Uni
     editMe.apply()
 }
 
+//var SharedPreferences.totalWeatherResponse: TotalWeatherResponse
+//    get() = getString(PreferencesUtils.TOTAL_WEATHER_RESPONSE, "") ?: ""
+//    set(value) = editMe { it.putString(PreferencesUtils.TOTAL_WEATHER_RESPONSE, value) }
+
 var SharedPreferences.description: String
     get() = getString(PreferencesUtils.DESCRIPTION, "") ?: ""
     set(value) = editMe { it.putString(PreferencesUtils.DESCRIPTION, value) }
 
-//var SharedPreferences.targetCode: String
-//    get() = getString(PreferencesUtils.TARGET_CODE, "") ?: ""
-//    set(value) = editMe { it.putString(PreferencesUtils.TARGET_CODE, value) }
+var SharedPreferences.pressure: Int
+    get() = getInt(PreferencesUtils.PRESSURE, 0)
+    set(value) = editMe { it.putInt(PreferencesUtils.PRESSURE, value) }
+
+
+

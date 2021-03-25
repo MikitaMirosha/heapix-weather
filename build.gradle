@@ -37,6 +37,12 @@ buildscript {
     // google play services
     ext.google_play_services_version = '18.0.0'
 
+    // pwittchen network events
+    ext.pwittchen_network_events_version = '2.1.6'
+
+    // gson
+    ext.gson_version = '2.8.6'
+
     repositories {
         mavenCentral()
         google()

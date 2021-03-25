@@ -7,6 +7,7 @@ import com.example.weather.R
 import com.example.weather.base.BaseMvpActivity
 import com.example.weather.net.responses.WeatherListResponse
 import com.example.weather.ui.weather.adapter.WeatherAdapter
+import com.github.pwittchen.networkevents.library.NetworkHelper
 import kotlinx.android.synthetic.main.activity_weather.*
 import kotlinx.android.synthetic.main.view_future_weather_list.*
 import kotlinx.android.synthetic.main.view_weather_description.*
@@ -26,7 +27,10 @@ class WeatherActivity : BaseMvpActivity(), WeatherView {
 
         setupWeatherAdapter()
 
-        weatherPresenter.onCreate(weatherAdapter.weatherItemClickObservable)
+        weatherPresenter.onCreate(
+            weatherAdapter.weatherItemClickObservable,
+            NetworkHelper.isConnectedToWiFiOrMobileNetwork(this)
+        )
     }
 
     private fun initListeners() {

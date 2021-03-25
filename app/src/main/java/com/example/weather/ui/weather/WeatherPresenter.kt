@@ -1,5 +1,6 @@
 package com.example.weather.ui.weather
 
+import android.content.SharedPreferences
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -11,9 +12,11 @@ import com.example.weather.net.responses.TotalWeatherResponse
 import com.example.weather.net.responses.WeatherListResponse
 import com.example.weather.utils.extensions.convertKelvinToCelsius
 import com.example.weather.utils.extensions.convertPosixFormatToUtcTime
+import com.google.gson.Gson
 import io.reactivex.Observable
 import org.kodein.di.instance
 import java.math.BigDecimal
+
 
 @InjectViewState
 class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
@@ -24,8 +27,17 @@ class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
 
     private lateinit var totalWeatherResponse: TotalWeatherResponse
 
-    fun onCreate(weatherItemClickObservable: Observable<WeatherListResponse>) {
-        getWeatherAndUpdateUi()
+    var mPrefs = preferences
+
+    fun onCreate(
+        weatherItemClickObservable: Observable<WeatherListResponse>,
+        isNetworkAvailable: Boolean
+    ) {
+
+        when (isNetworkAvailable) {
+            true -> getWeatherAndUpdateUi()
+            false -> getWeatherDataFromSharedPreferences()
+        }
 
         setupOnWeatherItemClickListener(weatherItemClickObservable)
     }
@@ -55,12 +67,33 @@ class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
 
                         setupWeatherData(totalWeatherResponse)
 
+                        saveTotalWeatherResponseToSharedPreferences(totalWeatherResponse)
+
                         saveWeatherData(totalWeatherResponse)
                     }, {
                         Log.e("TAG", it.toString())
                     }
                 )
         )
+    }
+
+    private fun getWeatherDataFromSharedPreferences() {
+        val totalWeatherResponse = getTotalWeatherResponseFromSharedPreferences()
+
+        setupWeatherItems(totalWeatherResponse)
+
+        setupCityName(totalWeatherResponse)
+        setupWeatherConditionIcon(totalWeatherResponse)
+        setupTemperature(totalWeatherResponse)
+        setupWeatherDescription(totalWeatherResponse)
+
+        setupTemperatureFeelsLike(totalWeatherResponse)
+        setupPressure(totalWeatherResponse)
+        setupHumidity(totalWeatherResponse)
+        setupWindSpeed(totalWeatherResponse)
+        setupSunrise(totalWeatherResponse)
+        setupSunset(totalWeatherResponse)
+        setupDateTime(totalWeatherResponse)
     }
 
     private fun setupOnWeatherItemClickListener(weatherItemClickObservable: Observable<WeatherListResponse>) {
@@ -86,17 +119,32 @@ class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
         setupTemperature(totalWeatherResponse)
         setupWeatherDescription(totalWeatherResponse)
 
-        setupTemperatureFeelsLike()
-        setupPressure()
-        setupHumidity()
-        setupWindSpeed()
+        setupTemperatureFeelsLike(totalWeatherResponse)
+        setupPressure(totalWeatherResponse)
+        setupHumidity(totalWeatherResponse)
+        setupWindSpeed(totalWeatherResponse)
         setupSunrise(totalWeatherResponse)
         setupSunset(totalWeatherResponse)
         setupDateTime(totalWeatherResponse)
     }
 
+    private fun saveTotalWeatherResponseToSharedPreferences(totalWeatherResponse: TotalWeatherResponse) {
+        val prefsEditor: SharedPreferences.Editor = mPrefs.edit()
+        val gson = Gson()
+        val json = gson.toJson(totalWeatherResponse)
+        prefsEditor.putString("totalWeatherResponse", json)
+        prefsEditor.apply()
+    }
+
+    private fun getTotalWeatherResponseFromSharedPreferences(): TotalWeatherResponse {
+        val gson = Gson()
+        val json = mPrefs.getString("totalWeatherResponse", "")
+        return gson.fromJson(json, TotalWeatherResponse::class.java)
+    }
+
     private fun saveWeatherData(totalWeatherResponse: TotalWeatherResponse) {
         saveDescription(totalWeatherResponse)
+        savePressure(totalWeatherResponse)
     }
 
     private fun saveDescription(totalWeatherResponse: TotalWeatherResponse) {
@@ -106,6 +154,18 @@ class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
             }.let { descriptionList ->
                 descriptionList.map { description ->
                     description?.let { weatherRepo.saveDescription(it) }
+                }
+            }
+        }
+    }
+
+    private fun savePressure(totalWeatherResponse: TotalWeatherResponse) {
+        totalWeatherResponse.list.map { weatherListResponse ->
+            weatherListResponse.main?.pressure
+        }.let { pressureList ->
+            pressureList.map { pressure ->
+                pressure?.let {
+                    weatherRepo.savePressure(it)
                 }
             }
         }
@@ -166,7 +226,7 @@ class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
         }
     }
 
-    private fun setupTemperatureFeelsLike() {
+    private fun setupTemperatureFeelsLike(totalWeatherResponse: TotalWeatherResponse) {
         totalWeatherResponse.list.map { weatherListResponse ->
             weatherListResponse.main?.feelsLike
         }.let { temperatureFeelsLikeList ->
@@ -180,7 +240,7 @@ class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
         }
     }
 
-    private fun setupPressure() {
+    private fun setupPressure(totalWeatherResponse: TotalWeatherResponse) {
         totalWeatherResponse.list.map { weatherListResponse ->
             weatherListResponse.main?.pressure
         }.let { pressureList ->
@@ -192,7 +252,7 @@ class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
         }
     }
 
-    private fun setupHumidity() {
+    private fun setupHumidity(totalWeatherResponse: TotalWeatherResponse) {
         totalWeatherResponse.list.map { weatherListResponse ->
             weatherListResponse.main?.humidity
         }.let { humidityList ->
@@ -204,7 +264,7 @@ class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
         }
     }
 
-    private fun setupWindSpeed() {
+    private fun setupWindSpeed(totalWeatherResponse: TotalWeatherResponse) {
         totalWeatherResponse.list.map { weatherListResponse ->
             weatherListResponse.wind?.speed
         }.let { windList ->

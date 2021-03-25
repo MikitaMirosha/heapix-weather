@@ -100,4 +100,10 @@ dependencies {
 
     // google play services
     implementation "com.google.android.gms:play-services-location:$google_play_services_version"
+
+    // pwittchen network events
+    implementation "com.github.pwittchen:networkevents:$pwittchen_network_events_version"
+
+    // gson
+    implementation "com.google.code.gson:gson:$gson_version"
 }
