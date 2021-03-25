@@ -6,6 +6,6 @@ import retrofit2.http.GET
 
 interface WeatherService {
 
-    @GET("forecast?q=Minsk&APPID=ea16b9eb090a4c931a74d2718ef4e161")
+    @GET("forecast?q=Minsk")
     fun getTotalWeatherResponse(): Observable<TotalWeatherResponse>
 }

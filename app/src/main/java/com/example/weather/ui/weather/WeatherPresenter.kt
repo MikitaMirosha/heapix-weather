@@ -1,5 +1,7 @@
 package com.example.weather.ui.weather
 
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import com.arellomobile.mvp.InjectViewState
 import com.example.weather.WeatherApp
@@ -18,6 +20,8 @@ class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
 
     private val weatherRepo: WeatherRepo by WeatherApp.kodein.instance()
 
+    private lateinit var runnable: Runnable
+
     private lateinit var totalWeatherResponse: TotalWeatherResponse
 
     fun onCreate(weatherItemClickObservable: Observable<WeatherListResponse>) {
@@ -28,6 +32,7 @@ class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
 
     companion object {
         const val SCALE: Int = 1
+        const val DELAY_MILLIS: Long = 3000L
         const val MILLISECONDS: Long = 1000L
         val ABSOLUTE_ZERO: BigDecimal = BigDecimal(273.15)
 
@@ -49,6 +54,8 @@ class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
                         totalWeatherResponse = it
 
                         setupWeatherData(totalWeatherResponse)
+
+                        saveWeatherData(totalWeatherResponse)
                     }, {
                         Log.e("TAG", it.toString())
                     }
@@ -86,6 +93,22 @@ class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
         setupSunrise(totalWeatherResponse)
         setupSunset(totalWeatherResponse)
         setupDateTime(totalWeatherResponse)
+    }
+
+    private fun saveWeatherData(totalWeatherResponse: TotalWeatherResponse) {
+        saveDescription(totalWeatherResponse)
+    }
+
+    private fun saveDescription(totalWeatherResponse: TotalWeatherResponse) {
+        totalWeatherResponse.list.map { weatherListResponse ->
+            weatherListResponse.weather.map { weatherResponse ->
+                weatherResponse.description
+            }.let { descriptionList ->
+                descriptionList.map { description ->
+                    description?.let { weatherRepo.saveDescription(it) }
+                }
+            }
+        }
     }
 
     private fun setupWeatherItems(totalWeatherResponse: TotalWeatherResponse) {
@@ -214,4 +237,13 @@ class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
     }
 
     fun toggleFutureWeatherList() = viewState.toggleFutureWeatherList()
+
+    fun onLayoutRefreshed() {
+        runnable = Runnable {
+            getWeatherAndUpdateUi()
+        }
+
+        Handler(Looper.getMainLooper())
+            .postDelayed(runnable, DELAY_MILLIS)
+    }
 }

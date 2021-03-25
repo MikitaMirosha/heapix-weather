@@ -11,21 +11,21 @@ class PreferencesUtils {
 
         private const val PREFERENCES = "PREFERENCES"
 
-//        const val BASE_CODE = "BASE_CODE"
+        const val DESCRIPTION = "DESCRIPTION"
 //        const val TARGET_CODE = "TARGET_CODE"
     }
 }
 
-//inline fun SharedPreferences.editMe(operation: (SharedPreferences.Editor) -> Unit) {
-//    val editMe = edit()
-//    operation(editMe)
-//    editMe.apply()
-//}
+inline fun SharedPreferences.editMe(operation: (SharedPreferences.Editor) -> Unit) {
+    val editMe = edit()
+    operation(editMe)
+    editMe.apply()
+}
 
-//var SharedPreferences.baseCode: String
-//    get() = getString(PreferencesUtils.BASE_CODE, "") ?: ""
-//    set(value) = editMe { it.putString(PreferencesUtils.BASE_CODE, value) }
-//
+var SharedPreferences.description: String
+    get() = getString(PreferencesUtils.DESCRIPTION, "") ?: ""
+    set(value) = editMe { it.putString(PreferencesUtils.DESCRIPTION, value) }
+
 //var SharedPreferences.targetCode: String
 //    get() = getString(PreferencesUtils.TARGET_CODE, "") ?: ""
 //    set(value) = editMe { it.putString(PreferencesUtils.TARGET_CODE, value) }

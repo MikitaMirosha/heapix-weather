@@ -15,15 +15,9 @@ class ApiRest {
 
     companion object {
 
-        private const val BASE_URL: String =
-            "https://api.openweathermap.org/data/2.5/"
-        //http://api.openweathermap.org/data/2.5/forecast?q=Minsk&APPID=ea16b9eb090a4c931a74d2718ef4e161
-        // http://api.openweathermap.org/data/2.5/weather?q=London&appid=ea16b9eb090a4c931a74d2718ef4e161/
-
-        // pro.openweathermap.org/data/2.5/forecast/hourly?q={city name}&appid={API key}
-
-        private const val API_KEY: String = "api_key"
-        private const val API_KEY_VALUE: String = "ea16b9eb090a4c931a74d2718ef4e161"
+        private const val APPID: String = "APPID"
+        private const val API_KEY: String = "ea16b9eb090a4c931a74d2718ef4e161"
+        private const val BASE_URL: String = "https://api.openweathermap.org/data/2.5/"
 
         private const val TIMEOUT: Long = 10
 
@@ -54,10 +48,7 @@ class ApiRest {
                     val originalHttpUrl = chain.request().url
                     val url = originalHttpUrl
                         .newBuilder()
-//                        .addQueryParameter(
-//                            API_KEY,
-//                            API_KEY_VALUE
-//                        )
+                        .addQueryParameter(APPID, API_KEY)
                         .build()
                     request.url(url)
                     return@addInterceptor chain.proceed(request.build())

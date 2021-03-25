@@ -19,7 +19,7 @@ interface WeatherView : BaseMvpView {
     fun setupWindSpeed(speed: BigDecimal)
     fun setupSunrise(sunrise: String)
     fun setupSunset(sunset: String)
-    fun setupDateTime(dateTime: Long)
+    fun setupDateTime(dateTime: String)
 
     fun toggleFutureWeatherList()
 }

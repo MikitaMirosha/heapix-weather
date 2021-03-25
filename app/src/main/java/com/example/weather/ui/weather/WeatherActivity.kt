@@ -33,6 +33,11 @@ class WeatherActivity : BaseMvpActivity(), WeatherView {
         vTvShowMore.setOnClickListener {
             weatherPresenter.toggleFutureWeatherList()
         }
+
+        vSwipeRefreshLayout.setOnRefreshListener {
+            weatherPresenter.onLayoutRefreshed()
+            vSwipeRefreshLayout.isRefreshing = false
+        }
     }
 
     private fun setupWeatherAdapter() {
@@ -87,8 +92,8 @@ class WeatherActivity : BaseMvpActivity(), WeatherView {
         vTvSunset.text = sunset
     }
 
-    override fun setupDateTime(dateTime: Long) {
-        vTvDateTime.text = dateTime.toString()
+    override fun setupDateTime(dateTime: String) {
+        vTvDateTime.text = dateTime
     }
 
     override fun toggleFutureWeatherList() = vFutureWeatherListBottomSheet.toggle()

@@ -30,7 +30,8 @@ class WeatherApp : Application() {
 
         bind<WeatherRepo>() with provider {
             WeatherRepo(
-                instance<Retrofit>().create(WeatherService::class.java)
+                instance<Retrofit>().create(WeatherService::class.java),
+                instance()
             )
         }
 

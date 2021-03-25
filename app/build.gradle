@@ -97,4 +97,7 @@ dependencies {
 
     // swipe refresh layout
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipe_refresh_layout_version"
+
+    // google play services
+    implementation "com.google.android.gms:play-services-location:$google_play_services_version"
 }
