@@ -2,11 +2,13 @@
   <dictionary name="home">
     <words>
       <w>coord</w>
+      <w>grnd</w>
       <w>joda</w>
       <w>kodein</w>
       <w>moxy</w>
       <w>prdownloader</w>
       <w>ptsans</w>
+      <w>swiperefreshlayout</w>
     </words>
   </dictionary>
 </component>

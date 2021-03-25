@@ -3,17 +3,17 @@ package com.example.weather.base
 import android.content.SharedPreferences
 import androidx.annotation.StringRes
 import com.arellomobile.mvp.MvpPresenter
-import com.example.weather.MyApp
-import com.heapix.exchange.utils.rx.SchedulerProvider
+import com.example.weather.WeatherApp
+import com.example.weather.utils.rx.SchedulerProvider
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import org.kodein.di.instance
 
 abstract class BaseMvpPresenter<V : BaseMvpView> : MvpPresenter<V>() {
 
-    protected val schedulers: SchedulerProvider by MyApp.kodein.instance()
-    protected val preferences: SharedPreferences by MyApp.kodein.instance()
-    private val compositeDisposable: CompositeDisposable by MyApp.kodein.instance()
+    protected val schedulers: SchedulerProvider by WeatherApp.kodein.instance()
+    protected val preferences: SharedPreferences by WeatherApp.kodein.instance()
+    private val compositeDisposable: CompositeDisposable by WeatherApp.kodein.instance()
 
     override fun onDestroy() {
         super.onDestroy()

@@ -5,18 +5,18 @@ import android.content.SharedPreferences
 import com.example.weather.net.repo.WeatherRepo
 import com.example.weather.net.services.ApiRest
 import com.example.weather.net.services.WeatherService
-import com.heapix.exchange.utils.preferences.PreferencesUtils
-import com.heapix.exchange.utils.rx.AppSchedulerProvider
-import com.heapix.exchange.utils.rx.SchedulerProvider
+import com.example.weather.utils.preferences.PreferencesUtils
+import com.example.weather.utils.rx.AppSchedulerProvider
+import com.example.weather.utils.rx.SchedulerProvider
 import io.reactivex.disposables.CompositeDisposable
 import org.kodein.di.*
 import retrofit2.Retrofit
 
 private lateinit var kodeinStored: DI
 
-class MyApp : Application() {
+class WeatherApp : Application() {
 
-    private val settingModule = DI.Module("settings Module") {
+    private val settingModule = DI.Module("settingModule") {
 
         bind<Retrofit>() with singleton { ApiRest.getApi() }
 
@@ -28,10 +28,9 @@ class MyApp : Application() {
             PreferencesUtils.getSharedPreferences(applicationContext)
         }
 
-        bind<WeatherRepo>() with singleton {
+        bind<WeatherRepo>() with provider {
             WeatherRepo(
-                instance<Retrofit>().create(WeatherService::class.java),
-                instance()
+                instance<Retrofit>().create(WeatherService::class.java)
             )
         }
 
@@ -53,5 +52,4 @@ class MyApp : Application() {
                 import(settingModule)
             }
     }
-
 }

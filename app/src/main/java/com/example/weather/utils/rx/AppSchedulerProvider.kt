@@ -1,4 +1,4 @@
-package com.heapix.exchange.utils.rx
+package com.example.weather.utils.rx
 
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers

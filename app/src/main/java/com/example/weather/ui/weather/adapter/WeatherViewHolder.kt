@@ -4,7 +4,7 @@ import android.view.View
 import com.example.weather.base.adapters.BaseViewHolder
 import com.example.weather.net.responses.TotalWeatherResponse
 import io.reactivex.subjects.PublishSubject
-import java.math.RoundingMode
+import kotlinx.android.synthetic.main.item_future_weather.*
 
 class WeatherViewHolder(
     itemView: View,
@@ -12,13 +12,13 @@ class WeatherViewHolder(
 ) : BaseViewHolder<TotalWeatherResponse>(itemView) {
 
     override fun bind(model: TotalWeatherResponse) {
-        setupBaseRate(model)
+        setupItemTemperature(model)
 
         setupClickListener(model)
     }
 
-    private fun setupBaseRate(totalWeatherResponse: TotalWeatherResponse) {
-
+    private fun setupItemTemperature(totalWeatherResponse: TotalWeatherResponse) {
+        //vTvItemTemperature.text = totalWeatherResponse.list
     }
 
     private fun setupClickListener(totalWeatherResponse: TotalWeatherResponse) {

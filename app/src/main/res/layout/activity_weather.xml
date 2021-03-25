@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/dark_blue"
     android:overScrollMode="never"
-    tools:context=".MainActivity">
+    tools:context=".ui.weather.WeatherActivity">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -26,26 +26,45 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dp_14"
                 android:gravity="center"
+                android:textSize="@dimen/sp_22"
                 tools:text="Minsk" />
 
             <ImageView
-                android:id="@+id/vIvWeatherCondition"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/vIvWeatherConditionIcon"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/dp_32"
                 tools:src="@drawable/ic_no_image" />
 
-            <TextView
-                style="@style/DefaultBoldText"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dp_14"
                 android:layout_marginTop="@dimen/dp_14"
                 android:layout_marginEnd="@dimen/dp_14"
                 android:gravity="center"
-                android:textSize="@dimen/sp_48"
-                tools:text="+23 C" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/vTvTemperature"
+                    style="@style/DefaultBoldText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="@dimen/sp_48"
+                    tools:text="23" />
+
+                <TextView
+                    style="@style/DefaultBoldText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_8"
+                    android:gravity="center"
+                    android:text="@string/celsius"
+                    android:textSize="@dimen/sp_48" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/vTvWeatherDescription"
@@ -88,10 +107,10 @@
 
     <com.example.weather.utils.view.BottomSheetLayoutWithBackground
         android:id="@+id/vFutureWeatherListBottomSheet"
-        app:collapsedHeight="0dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="@dimen/dp_18">
+        android:paddingTop="@dimen/dp_18"
+        app:collapsedHeight="0dp">
 
         <include
             layout="@layout/view_future_weather_list"

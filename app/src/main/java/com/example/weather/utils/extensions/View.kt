@@ -1,4 +1,4 @@
-package com.heapix.exchange.utils.extensions
+package com.example.weather.utils.extensions
 
 import android.view.View
 

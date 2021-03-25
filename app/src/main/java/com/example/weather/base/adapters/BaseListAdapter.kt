@@ -1,7 +1,7 @@
 package com.example.weather.base.adapters
 
 import androidx.recyclerview.widget.RecyclerView
-import com.example.weather.MyApp
+import com.example.weather.WeatherApp
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import org.kodein.di.instance
@@ -12,7 +12,7 @@ abstract class BaseListAdapter<T>(
     private val colourAlternateItems: Boolean = false
 ) : RecyclerView.Adapter<BaseViewHolder<T>>() {
 
-    private val compositeDisposable: CompositeDisposable by MyApp.kodein.instance()
+    private val compositeDisposable: CompositeDisposable by WeatherApp.kodein.instance()
 
     private val items: ArrayList<T> = ArrayList(proposedItems)
 

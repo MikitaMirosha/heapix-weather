@@ -1,6 +1,8 @@
 package com.example.weather.net.responses
 
+import java.math.BigDecimal
+
 data class WindResponse(
-    val speed: Double? = null,
+    val speed: BigDecimal? = null,
     val deg: Int? = null
 )

@@ -13,7 +13,7 @@ android {
     kapt { generateStubs = true }
 
     defaultConfig {
-        applicationId "com.heapix.calendarific"
+        applicationId "com.heapix.weather"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
@@ -68,10 +68,7 @@ dependencies {
 
     // glide
     implementation "com.github.bumptech.glide:glide:$glide_version"
-    kapt "com.github.bumptech.glide:compiler:$glide_version"
-    implementation("com.github.bumptech.glide:glide:4.12.0@aar") {
-        transitive = true
-    }
+    annotationProcessor "com.github.bumptech.glide:compiler:$glide_version"
 
     // moxy
     implementation "com.arello-mobile:moxy:$moxy_version"
@@ -97,4 +94,7 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:$http3_logging_interceptor"
     implementation "com.squareup.okhttp3:okhttp:$http3_version"
     implementation "com.mindorks.android:prdownloader:$prdownloader_version"
+
+    // swipe refresh layout
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipe_refresh_layout_version"
 }

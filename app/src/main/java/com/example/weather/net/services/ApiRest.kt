@@ -16,7 +16,11 @@ class ApiRest {
     companion object {
 
         private const val BASE_URL: String =
-            "http://api.openweathermap.org/data/2.5/weather?q=London&appid=ea16b9eb090a4c931a74d2718ef4e161"
+            "https://api.openweathermap.org/data/2.5/"
+        //http://api.openweathermap.org/data/2.5/forecast?q=Minsk&APPID=ea16b9eb090a4c931a74d2718ef4e161
+        // http://api.openweathermap.org/data/2.5/weather?q=London&appid=ea16b9eb090a4c931a74d2718ef4e161/
+
+        // pro.openweathermap.org/data/2.5/forecast/hourly?q={city name}&appid={API key}
 
         private const val API_KEY: String = "api_key"
         private const val API_KEY_VALUE: String = "ea16b9eb090a4c931a74d2718ef4e161"

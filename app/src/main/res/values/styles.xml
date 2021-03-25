@@ -19,14 +19,19 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
-    <style name="DefaultItemText" parent="DefaultText">
-        <item name="android:textSize">@dimen/sp_14</item>
-        <item name="android:textColor">@color/black</item>
-    </style>
-
     <style name="DefaultBoldText" parent="DefaultText">
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/sp_32</item>
+    </style>
+
+    <style name="WeatherDescriptionText">
+        <item name="android:textSize">@dimen/sp_16</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="FutureWeatherItemText" parent="DefaultText">
+        <item name="android:textSize">@dimen/sp_14</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
 </resources>

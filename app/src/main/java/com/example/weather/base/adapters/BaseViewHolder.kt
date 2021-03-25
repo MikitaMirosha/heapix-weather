@@ -5,7 +5,7 @@ import android.view.View
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.example.weather.MyApp
+import com.example.weather.WeatherApp
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import kotlinx.android.extensions.LayoutContainer
@@ -13,7 +13,7 @@ import org.kodein.di.instance
 
 abstract class BaseViewHolder<in T>(view: View) : RecyclerView.ViewHolder(view), LayoutContainer {
 
-    private val compositeDisposable: CompositeDisposable by MyApp.kodein.instance()
+    private val compositeDisposable: CompositeDisposable by WeatherApp.kodein.instance()
 
     abstract fun bind(model: T)
 
