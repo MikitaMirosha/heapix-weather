@@ -15,11 +15,10 @@ class ApiRest {
 
     companion object {
 
-        private const val APPID: String = "APPID"
+        private const val TIMEOUT: Long = 10
+        private const val APP_ID: String = "APPID"
         private const val API_KEY: String = "ea16b9eb090a4c931a74d2718ef4e161"
         private const val BASE_URL: String = "https://api.openweathermap.org/data/2.5/"
-
-        private const val TIMEOUT: Long = 10
 
         internal fun getApi(): Retrofit {
             val client = getOkHttpClient()
@@ -48,7 +47,7 @@ class ApiRest {
                     val originalHttpUrl = chain.request().url
                     val url = originalHttpUrl
                         .newBuilder()
-                        .addQueryParameter(APPID, API_KEY)
+                        .addQueryParameter(APP_ID, API_KEY)
                         .build()
                     request.url(url)
                     return@addInterceptor chain.proceed(request.build())

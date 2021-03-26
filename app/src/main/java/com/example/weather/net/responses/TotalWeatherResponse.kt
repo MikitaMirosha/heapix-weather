@@ -1,12 +1,13 @@
 package com.example.weather.net.responses
 
+import com.google.gson.annotations.SerializedName
+
 data class TotalWeatherResponse(
-    val cod: String? = null,
+    @SerializedName("cod")      val code:                   String? = null,
+
     val message: Int? = null,
-    val cnt: Int? = null,
-    val list: MutableList<WeatherListResponse> = mutableListOf(),
-    val city: CityResponse? = null
+
+    @SerializedName("cnt")      val numberOfTimestamps:     Int? = null,
+    @SerializedName("list")     val weatherListResponse:    MutableList<WeatherListResponse> = mutableListOf(),
+    @SerializedName("city")     val cityResponse:           CityResponse? = null
 )
-
-
-

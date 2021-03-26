@@ -23,6 +23,7 @@ class WeatherActivity : BaseMvpActivity(), WeatherView {
     override fun getLayoutId(): Int = R.layout.activity_weather
 
     override fun onCreateActivity(savedInstanceState: Bundle?) {
+
         initListeners()
 
         setupWeatherAdapter()
@@ -34,8 +35,9 @@ class WeatherActivity : BaseMvpActivity(), WeatherView {
     }
 
     private fun initListeners() {
+
         vTvShowMore.setOnClickListener {
-            weatherPresenter.toggleFutureWeatherList()
+            weatherPresenter.onShowMoreButtonClicked()
         }
 
         vSwipeRefreshLayout.setOnRefreshListener {
@@ -53,13 +55,13 @@ class WeatherActivity : BaseMvpActivity(), WeatherView {
         weatherAdapter.setItems(weatherListResponse)
     }
 
-    override fun setupCityName(name: String) {
-        vTvCityName.text = name
+    override fun setupCityName(cityName: String) {
+        vTvCityName.text = cityName
     }
 
-    override fun setupWeatherConditionIcon(icon: String) {
+    override fun setupWeatherConditionIcon(weatherConditionIcon: String) {
         Glide.with(applicationContext)
-            .load(icon)
+            .load(weatherConditionIcon)
             .error(android.R.drawable.stat_notify_error)
             .into(vIvWeatherConditionIcon)
     }
@@ -68,8 +70,8 @@ class WeatherActivity : BaseMvpActivity(), WeatherView {
         vTvTemperature.text = temperature.toPlainString()
     }
 
-    override fun setupWeatherDescription(description: String) {
-        vTvWeatherDescription.text = description
+    override fun setupWeatherDescription(weatherDescription: String) {
+        vTvWeatherDescription.text = weatherDescription
     }
 
     override fun setupTemperatureFeelsLike(temperatureFeelsLike: BigDecimal) {
@@ -84,8 +86,8 @@ class WeatherActivity : BaseMvpActivity(), WeatherView {
         vTvHumidity.text = humidity.toString()
     }
 
-    override fun setupWindSpeed(speed: BigDecimal) {
-        vTvWindSpeed.text = speed.toPlainString()
+    override fun setupWindSpeed(windSpeed: BigDecimal) {
+        vTvWindSpeed.text = windSpeed.toPlainString()
     }
 
     override fun setupSunrise(sunrise: String) {
@@ -100,6 +102,7 @@ class WeatherActivity : BaseMvpActivity(), WeatherView {
         vTvDateTime.text = dateTime
     }
 
-    override fun toggleFutureWeatherList() = vFutureWeatherListBottomSheet.toggle()
-
+    override fun toggleFutureWeatherList() {
+        vFutureWeatherListBottomSheet.toggle()
+    }
 }

@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import com.example.weather.R
 import com.example.weather.base.adapters.BaseListAdapter
 import com.example.weather.base.adapters.BaseViewHolder
-import com.example.weather.net.responses.TotalWeatherResponse
 import com.example.weather.net.responses.WeatherListResponse
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
@@ -26,5 +25,4 @@ class WeatherAdapter : BaseListAdapter<WeatherListResponse>() {
             totalWeatherPublishSubject
         )
     }
-
 }

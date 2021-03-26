@@ -1,6 +1,6 @@
 package com.example.weather.net.responses
 
-data class CityResponse (
+data class CityResponse(
     val id: Int? = null,
     val name: String? = null,
     val coord: CoordinatesResponse? = null,

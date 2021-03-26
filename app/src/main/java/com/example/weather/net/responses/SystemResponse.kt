@@ -1,5 +1,8 @@
 package com.example.weather.net.responses
 
+import com.google.gson.annotations.SerializedName
+
 data class SystemResponse(
-    val pod: String? = null
+    @SerializedName("pod")
+    val partOfTheDay: String? = null
 )

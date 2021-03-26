@@ -1,8 +1,9 @@
 package com.example.weather.net.responses
 
+import com.google.gson.annotations.SerializedName
 import java.math.BigDecimal
 
 data class CoordinatesResponse(
-    val lon: BigDecimal? = null,
-    val lat: BigDecimal? = null
+    @SerializedName("lon")  val longitude:  BigDecimal? = null,
+    @SerializedName("lat")  val latitude:   BigDecimal? = null
 )

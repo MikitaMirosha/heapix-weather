@@ -29,12 +29,8 @@ class WeatherApp : Application() {
         }
 
         bind<WeatherRepo>() with provider {
-            WeatherRepo(
-                instance<Retrofit>().create(WeatherService::class.java),
-                instance()
-            )
+            WeatherRepo(instance<Retrofit>().create(WeatherService::class.java))
         }
-
     }
 
     companion object {

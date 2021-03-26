@@ -48,6 +48,8 @@ class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
         const val MILLISECONDS: Long = 1000L
         val ABSOLUTE_ZERO: BigDecimal = BigDecimal(273.15)
 
+        const val CITY_NAME: String = "Minsk"
+
         const val OUTPUT_TIME_PATTERN: String = "HH:mm"
         const val OUTPUT_DATE_TIME_PATTERN: String = "HH:mm  dd.MM"
         const val INPUT_POSIX_PATTERN: String = "yyyy-MM-dd'T'HH:mm:ss.sssZ"
@@ -58,7 +60,7 @@ class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
 
     private fun getWeatherAndUpdateUi() {
         addDisposable(
-            weatherRepo.getTotalWeatherResponse()
+            weatherRepo.getTotalWeatherResponse(CITY_NAME)
                 .subscribeOn(schedulers.io())
                 .observeOn(schedulers.ui())
                 .subscribe(
@@ -143,46 +145,21 @@ class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
     }
 
     private fun saveWeatherData(totalWeatherResponse: TotalWeatherResponse) {
-        saveDescription(totalWeatherResponse)
-        savePressure(totalWeatherResponse)
-    }
 
-    private fun saveDescription(totalWeatherResponse: TotalWeatherResponse) {
-        totalWeatherResponse.list.map { weatherListResponse ->
-            weatherListResponse.weather.map { weatherResponse ->
-                weatherResponse.description
-            }.let { descriptionList ->
-                descriptionList.map { description ->
-                    description?.let { weatherRepo.saveDescription(it) }
-                }
-            }
-        }
-    }
-
-    private fun savePressure(totalWeatherResponse: TotalWeatherResponse) {
-        totalWeatherResponse.list.map { weatherListResponse ->
-            weatherListResponse.main?.pressure
-        }.let { pressureList ->
-            pressureList.map { pressure ->
-                pressure?.let {
-                    weatherRepo.savePressure(it)
-                }
-            }
-        }
     }
 
     private fun setupWeatherItems(totalWeatherResponse: TotalWeatherResponse) {
-        viewState.setupWeatherItems(totalWeatherResponse.list)
+        viewState.setupWeatherItems(totalWeatherResponse.weatherListResponse)
     }
 
     private fun setupCityName(totalWeatherResponse: TotalWeatherResponse) {
-        totalWeatherResponse.city?.name
+        totalWeatherResponse.cityResponse?.name
             ?.let { name -> viewState.setupCityName(name) }
     }
 
     private fun setupWeatherConditionIcon(totalWeatherResponse: TotalWeatherResponse) {
-        totalWeatherResponse.list.map { weatherListResponse ->
-            weatherListResponse.weather.map { weatherResponse ->
+        totalWeatherResponse.weatherListResponse.map { weatherListResponse ->
+            weatherListResponse.weatherResponses.map { weatherResponse ->
                 weatherResponse.icon
             }.let { iconList ->
                 iconList.map { icon ->
@@ -201,8 +178,8 @@ class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
     }
 
     private fun setupTemperature(totalWeatherResponse: TotalWeatherResponse) {
-        totalWeatherResponse.list.map { weatherListResponse ->
-            weatherListResponse.main?.temp
+        totalWeatherResponse.weatherListResponse.map { weatherListResponse ->
+            weatherListResponse.mainParametersResponse?.temperature
         }.let { temperatureList ->
             temperatureList.map { temperature ->
                 temperature?.let { kelvinDegrees ->
@@ -215,8 +192,8 @@ class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
     }
 
     private fun setupWeatherDescription(totalWeatherResponse: TotalWeatherResponse) {
-        totalWeatherResponse.list.map { weatherListResponse ->
-            weatherListResponse.weather.map { weatherResponse ->
+        totalWeatherResponse.weatherListResponse.map { weatherListResponse ->
+            weatherListResponse.weatherResponses.map { weatherResponse ->
                 weatherResponse.description
             }.let { descriptionList ->
                 descriptionList.map { description ->
@@ -227,8 +204,8 @@ class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
     }
 
     private fun setupTemperatureFeelsLike(totalWeatherResponse: TotalWeatherResponse) {
-        totalWeatherResponse.list.map { weatherListResponse ->
-            weatherListResponse.main?.feelsLike
+        totalWeatherResponse.weatherListResponse.map { weatherListResponse ->
+            weatherListResponse.mainParametersResponse?.feelsLike
         }.let { temperatureFeelsLikeList ->
             temperatureFeelsLikeList.map { temperatureFeelsLike ->
                 temperatureFeelsLike?.let { kelvinDegrees ->
@@ -241,8 +218,8 @@ class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
     }
 
     private fun setupPressure(totalWeatherResponse: TotalWeatherResponse) {
-        totalWeatherResponse.list.map { weatherListResponse ->
-            weatherListResponse.main?.pressure
+        totalWeatherResponse.weatherListResponse.map { weatherListResponse ->
+            weatherListResponse.mainParametersResponse?.pressure
         }.let { pressureList ->
             pressureList.map { pressure ->
                 pressure?.let {
@@ -253,8 +230,8 @@ class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
     }
 
     private fun setupHumidity(totalWeatherResponse: TotalWeatherResponse) {
-        totalWeatherResponse.list.map { weatherListResponse ->
-            weatherListResponse.main?.humidity
+        totalWeatherResponse.weatherListResponse.map { weatherListResponse ->
+            weatherListResponse.mainParametersResponse?.humidity
         }.let { humidityList ->
             humidityList.map { humidity ->
                 humidity?.let {
@@ -265,8 +242,8 @@ class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
     }
 
     private fun setupWindSpeed(totalWeatherResponse: TotalWeatherResponse) {
-        totalWeatherResponse.list.map { weatherListResponse ->
-            weatherListResponse.wind?.speed
+        totalWeatherResponse.weatherListResponse.map { weatherListResponse ->
+            weatherListResponse.windResponse?.speed
         }.let { windList ->
             windList.map { wind ->
                 wind?.let {
@@ -277,13 +254,13 @@ class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
     }
 
     private fun setupSunrise(totalWeatherResponse: TotalWeatherResponse) {
-        totalWeatherResponse.city?.sunrise
+        totalWeatherResponse.cityResponse?.sunrise
             ?.let { convertPosixFormatToUtcTime(it) }
             ?.let { viewState.setupSunrise(it) }
     }
 
     private fun setupSunset(totalWeatherResponse: TotalWeatherResponse) {
-        totalWeatherResponse.city?.sunset
+        totalWeatherResponse.cityResponse?.sunset
             ?.let { convertPosixFormatToUtcTime(it) }
             ?.let { viewState.setupSunset(it) }
     }
@@ -296,7 +273,7 @@ class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
 //        }
     }
 
-    fun toggleFutureWeatherList() = viewState.toggleFutureWeatherList()
+    fun onShowMoreButtonClicked() = viewState.toggleFutureWeatherList()
 
     fun onLayoutRefreshed() {
         runnable = Runnable {
