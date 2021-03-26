@@ -193,8 +193,8 @@
             style="@style/WeatherDescriptionText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxLength="14"
-            android:text="@string/latest_update" />
+            android:maxLength="12"
+            android:text="@string/next_update" />
 
         <TextView
             android:id="@+id/vTvDateTime"

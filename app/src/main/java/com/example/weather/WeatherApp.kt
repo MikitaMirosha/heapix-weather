@@ -5,9 +5,9 @@ import android.content.SharedPreferences
 import com.example.weather.net.repo.WeatherRepo
 import com.example.weather.net.services.ApiRest
 import com.example.weather.net.services.WeatherService
-import com.example.weather.utils.preferences.PreferencesUtils
 import com.example.weather.utils.rx.AppSchedulerProvider
 import com.example.weather.utils.rx.SchedulerProvider
+import com.example.weather.utils.preferences.PreferencesUtils
 import io.reactivex.disposables.CompositeDisposable
 import org.kodein.di.*
 import retrofit2.Retrofit
@@ -29,7 +29,9 @@ class WeatherApp : Application() {
         }
 
         bind<WeatherRepo>() with provider {
-            WeatherRepo(instance<Retrofit>().create(WeatherService::class.java))
+            WeatherRepo(
+                instance<Retrofit>().create(WeatherService::class.java)
+            )
         }
     }
 

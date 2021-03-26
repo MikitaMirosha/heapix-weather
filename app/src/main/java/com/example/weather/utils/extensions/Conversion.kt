@@ -1,33 +1,40 @@
 package com.example.weather.utils.extensions
 
-import com.example.weather.ui.weather.WeatherPresenter
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import java.math.BigDecimal
 import java.math.RoundingMode
 
+const val SCALE: Int = 1
+const val MILLISECONDS: Long = 1000L
+val ABSOLUTE_ZERO: BigDecimal = BigDecimal(273.15)
+
+const val OUTPUT_TIME_PATTERN: String = "HH:mm"
+const val OUTPUT_DATE_TIME_PATTERN: String = "HH:mm  dd.MM"
+const val INPUT_POSIX_PATTERN: String = "yyyy-MM-dd'T'HH:mm:ss.sssZ"
+
 fun convertKelvinToCelsius(kelvinDegrees: BigDecimal): BigDecimal {
     return kelvinDegrees
-        .minus(WeatherPresenter.ABSOLUTE_ZERO)
-        .setScale(WeatherPresenter.SCALE, RoundingMode.UP)
+        .minus(ABSOLUTE_ZERO)
+        .setScale(SCALE, RoundingMode.UP)
 }
 
 fun convertPosixFormatToUtcTime(posixTime: Long): String {
     return DateTimeFormat
-        .forPattern(WeatherPresenter.OUTPUT_TIME_PATTERN)
+        .forPattern(OUTPUT_TIME_PATTERN)
         .print(
             DateTimeFormat
-                .forPattern(WeatherPresenter.INPUT_POSIX_PATTERN)
-                .parseDateTime(DateTime(posixTime.times(WeatherPresenter.MILLISECONDS)).toString())
+                .forPattern(INPUT_POSIX_PATTERN)
+                .parseDateTime(DateTime(posixTime.times(MILLISECONDS)).toString())
         )
 }
 
 fun convertPosixFormatToUtcDateTime(posixTime: Long): String {
     return DateTimeFormat
-        .forPattern(WeatherPresenter.OUTPUT_DATE_TIME_PATTERN)
+        .forPattern(OUTPUT_DATE_TIME_PATTERN)
         .print(
             DateTimeFormat
-                .forPattern(WeatherPresenter.INPUT_POSIX_PATTERN)
-                .parseDateTime(DateTime(posixTime.times(WeatherPresenter.MILLISECONDS)).toString())
+                .forPattern(INPUT_POSIX_PATTERN)
+                .parseDateTime(DateTime(posixTime.times(MILLISECONDS)).toString())
         )
 }

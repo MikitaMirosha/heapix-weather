@@ -1,6 +1,5 @@
 package com.example.weather.ui.weather
 
-import android.content.SharedPreferences
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -9,13 +8,9 @@ import com.example.weather.WeatherApp
 import com.example.weather.base.BaseMvpPresenter
 import com.example.weather.net.repo.WeatherRepo
 import com.example.weather.net.responses.TotalWeatherResponse
-import com.example.weather.net.responses.WeatherListResponse
 import com.example.weather.utils.extensions.*
 import com.google.gson.Gson
-import io.reactivex.Observable
 import org.kodein.di.instance
-import java.math.BigDecimal
-
 
 @InjectViewState
 class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
@@ -24,36 +19,20 @@ class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
 
     private lateinit var runnable: Runnable
 
-    private lateinit var totalWeatherResponse: TotalWeatherResponse
-
-    var mPrefs = preferences
-
-    fun onCreate(
-        weatherItemClickObservable: Observable<WeatherListResponse>,
-        isNetworkAvailable: Boolean
-    ) {
+    fun onCreate(isNetworkAvailable: Boolean) {
 
         when (isNetworkAvailable) {
             true -> getWeatherAndUpdateUi()
-            false -> getWeatherDataFromSharedPreferences()
+            false -> getWeatherFromStorage()
         }
-
-        setupOnWeatherItemClickListener(weatherItemClickObservable)
     }
 
     companion object {
-        const val SCALE: Int = 1
         const val DELAY_MILLIS: Long = 3000L
-        const val MILLISECONDS: Long = 1000L
-        val ABSOLUTE_ZERO: BigDecimal = BigDecimal(273.15)
 
         const val CITY_NAME: String = "Minsk"
-
-        const val OUTPUT_TIME_PATTERN: String = "HH:mm"
-        const val OUTPUT_DATE_TIME_PATTERN: String = "HH:mm  dd.MM"
-        const val INPUT_POSIX_PATTERN: String = "yyyy-MM-dd'T'HH:mm:ss.sssZ"
-
         const val PNG_FORMAT: String = ".png"
+        const val TOTAL_WEATHER_RESPONSE: String = "totalWeatherResponse"
         const val BASE_ICON_URL: String = "https://openweathermap.org/img/w/"
     }
 
@@ -64,9 +43,9 @@ class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
                 .observeOn(schedulers.ui())
                 .subscribe(
                     {
-                        setupWeatherData(it)
+                        setupWeather(it)
 
-                        saveTotalWeatherResponseToSharedPreferences(it)
+                        saveWeather(it)
                     }, {
                         Log.e("TAG", it.toString())
                     }
@@ -74,8 +53,8 @@ class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
         )
     }
 
-    private fun getWeatherDataFromSharedPreferences() {
-        val totalWeatherResponse = getTotalWeatherResponseFromSharedPreferences()
+    private fun getWeatherFromStorage() {
+        val totalWeatherResponse = getWeather()
 
         setupWeatherItems(totalWeatherResponse)
 
@@ -93,22 +72,7 @@ class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
         setupDateTime(totalWeatherResponse)
     }
 
-    private fun setupOnWeatherItemClickListener(weatherItemClickObservable: Observable<WeatherListResponse>) {
-        addDisposable(
-            weatherItemClickObservable
-                .subscribeOn(schedulers.io())
-                .observeOn(schedulers.ui())
-                .subscribe(
-                    {
-                        getWeatherAndUpdateUi()
-                    }, {
-                        Log.e("TAG", it.toString())
-                    }
-                )
-        )
-    }
-
-    private fun setupWeatherData(totalWeatherResponse: TotalWeatherResponse) {
+    private fun setupWeather(totalWeatherResponse: TotalWeatherResponse) {
         setupWeatherItems(totalWeatherResponse)
 
         setupCityName(totalWeatherResponse)
@@ -125,18 +89,16 @@ class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
         setupDateTime(totalWeatherResponse)
     }
 
-    private fun saveTotalWeatherResponseToSharedPreferences(totalWeatherResponse: TotalWeatherResponse) {
-        val prefsEditor: SharedPreferences.Editor = mPrefs.edit()
-        val gson = Gson()
-        val json = gson.toJson(totalWeatherResponse)
-        prefsEditor.putString("totalWeatherResponse", json)
+    private fun saveWeather(totalWeatherResponse: TotalWeatherResponse) {
+        val prefsEditor = preferences.edit()
+
+        prefsEditor.putString(TOTAL_WEATHER_RESPONSE, Gson().toJson(totalWeatherResponse))
         prefsEditor.apply()
     }
 
-    private fun getTotalWeatherResponseFromSharedPreferences(): TotalWeatherResponse {
-        val gson = Gson()
-        val json = mPrefs.getString("totalWeatherResponse", "")
-        return gson.fromJson(json, TotalWeatherResponse::class.java)
+    private fun getWeather(): TotalWeatherResponse {
+        val json = preferences.getString(TOTAL_WEATHER_RESPONSE, "")
+        return Gson().fromJson(json, TotalWeatherResponse::class.java)
     }
 
     private fun setupWeatherItems(totalWeatherResponse: TotalWeatherResponse) {

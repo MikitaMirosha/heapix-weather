@@ -7,13 +7,9 @@ import com.example.weather.net.responses.WeatherListResponse
 import com.example.weather.ui.weather.WeatherPresenter.Companion.BASE_ICON_URL
 import com.example.weather.ui.weather.WeatherPresenter.Companion.PNG_FORMAT
 import com.example.weather.utils.extensions.*
-import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.item_future_weather.*
 
-class WeatherViewHolder(
-    itemView: View,
-    private val totalWeatherPublishSubject: PublishSubject<WeatherListResponse>
-) : BaseViewHolder<WeatherListResponse>(itemView) {
+class WeatherViewHolder(itemView: View) : BaseViewHolder<WeatherListResponse>(itemView) {
 
     override fun bind(model: WeatherListResponse) {
         setupItemWeatherConditionIcon(model)
@@ -22,8 +18,6 @@ class WeatherViewHolder(
         setupItemWeatherDescription(model)
         setupItemTemperatureFeelsLike(model)
         setupItemWindSpeed(model)
-
-        setupClickListener(model)
     }
 
     private fun setupItemWeatherConditionIcon(weatherListResponse: WeatherListResponse) {
@@ -55,11 +49,5 @@ class WeatherViewHolder(
 
     private fun setupItemWindSpeed(weatherListResponse: WeatherListResponse) {
         vTvItemWindSpeed.text = weatherListResponse.getWindSpeed()
-    }
-
-    private fun setupClickListener(weatherListResponse: WeatherListResponse) {
-        setOnClickListener {
-            totalWeatherPublishSubject.onNext(weatherListResponse)
-        }
     }
 }

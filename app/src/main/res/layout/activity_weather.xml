@@ -63,7 +63,6 @@
 
                 </LinearLayout>
 
-
                 <ImageView
                     android:id="@+id/vIvWeatherConditionIcon"
                     android:layout_width="@dimen/dp_48"
@@ -87,7 +86,7 @@
                     layout="@layout/view_weather_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_14" />
+                    android:layout_marginTop="@dimen/dp_32" />
 
                 <View
                     android:layout_width="match_parent"

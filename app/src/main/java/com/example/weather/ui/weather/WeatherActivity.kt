@@ -25,13 +25,9 @@ class WeatherActivity : BaseMvpActivity(), WeatherView {
     override fun onCreateActivity(savedInstanceState: Bundle?) {
 
         initListeners()
-
         setupWeatherAdapter()
 
-        weatherPresenter.onCreate(
-            weatherAdapter.weatherItemClickObservable,
-            NetworkHelper.isConnectedToWiFiOrMobileNetwork(this)
-        )
+        weatherPresenter.onCreate(NetworkHelper.isConnectedToWiFiOrMobileNetwork(this))
     }
 
     private fun initListeners() {
