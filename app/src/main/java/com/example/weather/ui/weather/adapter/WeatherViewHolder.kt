@@ -27,12 +27,14 @@ class WeatherViewHolder(
     }
 
     private fun setupItemWeatherConditionIcon(weatherListResponse: WeatherListResponse) {
-        weatherListResponse.getWeatherConditionIconList().map {
-            Glide.with(context)
-                .load(BASE_ICON_URL + it + PNG_FORMAT)
-                .error(android.R.drawable.stat_notify_error)
-                .into(vIvItemWeatherConditionIcon)
-        }
+        Glide.with(context)
+            .load(
+                BASE_ICON_URL
+                    .plus(weatherListResponse.getWeatherConditionIcon())
+                    .plus(PNG_FORMAT)
+            )
+            .error(android.R.drawable.stat_notify_error)
+            .into(vIvItemWeatherConditionIcon)
     }
 
     private fun setupItemTemperature(weatherListResponse: WeatherListResponse) {
@@ -44,9 +46,7 @@ class WeatherViewHolder(
     }
 
     private fun setupItemWeatherDescription(weatherListResponse: WeatherListResponse) {
-        weatherListResponse.getWeatherDescriptionList().map { description ->
-            description.let { vTvItemWeatherDescription.text = it }
-        }
+        vTvItemWeatherDescription.text = weatherListResponse.getWeatherDescription()
     }
 
     private fun setupItemTemperatureFeelsLike(weatherListResponse: WeatherListResponse) {

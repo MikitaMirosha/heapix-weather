@@ -2,10 +2,13 @@ package com.example.weather.utils.extensions
 
 import com.example.weather.net.responses.WeatherListResponse
 
-fun WeatherListResponse.getWeatherConditionIconList(): List<String?> {
-    return this.weatherResponses.map { weatherResponse ->
+fun WeatherListResponse.getWeatherConditionIcon(): String? {
+    this.weatherResponses.map { weatherResponse ->
         weatherResponse.icon
+    }.map { icon ->
+        return icon
     }
+    return null
 }
 
 fun WeatherListResponse.getConvertedTemperature(): String? {
@@ -22,10 +25,13 @@ fun WeatherListResponse.getConvertedDateTime(): String? {
     }
 }
 
-fun WeatherListResponse.getWeatherDescriptionList(): List<String?> {
-    return this.weatherResponses.map { weatherResponse ->
+fun WeatherListResponse.getWeatherDescription(): String? {
+    this.weatherResponses.map { weatherResponse ->
         weatherResponse.description
+    }.map { description ->
+        return description
     }
+    return null
 }
 
 fun WeatherListResponse.getConvertedTemperatureFeelsLike(): String? {

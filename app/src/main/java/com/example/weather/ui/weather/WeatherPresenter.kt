@@ -10,8 +10,7 @@ import com.example.weather.base.BaseMvpPresenter
 import com.example.weather.net.repo.WeatherRepo
 import com.example.weather.net.responses.TotalWeatherResponse
 import com.example.weather.net.responses.WeatherListResponse
-import com.example.weather.utils.extensions.convertKelvinToCelsius
-import com.example.weather.utils.extensions.convertPosixFormatToUtcTime
+import com.example.weather.utils.extensions.*
 import com.google.gson.Gson
 import io.reactivex.Observable
 import org.kodein.di.instance
@@ -65,13 +64,9 @@ class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
                 .observeOn(schedulers.ui())
                 .subscribe(
                     {
-                        totalWeatherResponse = it
+                        setupWeatherData(it)
 
-                        setupWeatherData(totalWeatherResponse)
-
-                        saveTotalWeatherResponseToSharedPreferences(totalWeatherResponse)
-
-                        saveWeatherData(totalWeatherResponse)
+                        saveTotalWeatherResponseToSharedPreferences(it)
                     }, {
                         Log.e("TAG", it.toString())
                     }
@@ -144,136 +139,79 @@ class WeatherPresenter : BaseMvpPresenter<WeatherView>() {
         return gson.fromJson(json, TotalWeatherResponse::class.java)
     }
 
-    private fun saveWeatherData(totalWeatherResponse: TotalWeatherResponse) {
-
-    }
-
     private fun setupWeatherItems(totalWeatherResponse: TotalWeatherResponse) {
         viewState.setupWeatherItems(totalWeatherResponse.weatherListResponse)
     }
 
     private fun setupCityName(totalWeatherResponse: TotalWeatherResponse) {
-        totalWeatherResponse.cityResponse?.name
-            ?.let { name -> viewState.setupCityName(name) }
+        viewState.setupCityName(totalWeatherResponse.getCity())
     }
 
     private fun setupWeatherConditionIcon(totalWeatherResponse: TotalWeatherResponse) {
-        totalWeatherResponse.weatherListResponse.map { weatherListResponse ->
-            weatherListResponse.weatherResponses.map { weatherResponse ->
-                weatherResponse.icon
-            }.let { iconList ->
-                iconList.map { icon ->
-                    icon.let {
-                        it?.let { icon ->
-                            viewState.setupWeatherConditionIcon(
-                                BASE_ICON_URL
-                                    .plus(icon)
-                                    .plus(PNG_FORMAT)
-                            )
-                        }
-                    }
-                }
-            }
-        }
+        viewState.setupWeatherConditionIcon(
+            BASE_ICON_URL
+                .plus(totalWeatherResponse.getWeatherConditionIcon())
+                .plus(PNG_FORMAT)
+        )
     }
 
     private fun setupTemperature(totalWeatherResponse: TotalWeatherResponse) {
-        totalWeatherResponse.weatherListResponse.map { weatherListResponse ->
-            weatherListResponse.mainParametersResponse?.temperature
-        }.let { temperatureList ->
-            temperatureList.map { temperature ->
-                temperature?.let { kelvinDegrees ->
-                    convertKelvinToCelsius(kelvinDegrees).let {
-                        viewState.setupTemperature(it)
-                    }
-                }
-            }
+        totalWeatherResponse.getConvertedTemperature()?.let {
+            viewState.setupTemperature(it)
         }
     }
 
     private fun setupWeatherDescription(totalWeatherResponse: TotalWeatherResponse) {
-        totalWeatherResponse.weatherListResponse.map { weatherListResponse ->
-            weatherListResponse.weatherResponses.map { weatherResponse ->
-                weatherResponse.description
-            }.let { descriptionList ->
-                descriptionList.map { description ->
-                    description?.let { viewState.setupWeatherDescription(it) }
-                }
-            }
+        totalWeatherResponse.getWeatherDescription()?.let {
+            viewState.setupWeatherDescription(it)
         }
     }
 
     private fun setupTemperatureFeelsLike(totalWeatherResponse: TotalWeatherResponse) {
-        totalWeatherResponse.weatherListResponse.map { weatherListResponse ->
-            weatherListResponse.mainParametersResponse?.feelsLike
-        }.let { temperatureFeelsLikeList ->
-            temperatureFeelsLikeList.map { temperatureFeelsLike ->
-                temperatureFeelsLike?.let { kelvinDegrees ->
-                    convertKelvinToCelsius(kelvinDegrees).let {
-                        viewState.setupTemperatureFeelsLike(it)
-                    }
-                }
-            }
+        totalWeatherResponse.getConvertedTemperatureFeelsLike()?.let {
+            viewState.setupTemperatureFeelsLike(it)
         }
     }
 
     private fun setupPressure(totalWeatherResponse: TotalWeatherResponse) {
-        totalWeatherResponse.weatherListResponse.map { weatherListResponse ->
-            weatherListResponse.mainParametersResponse?.pressure
-        }.let { pressureList ->
-            pressureList.map { pressure ->
-                pressure?.let {
-                    viewState.setupPressure(it)
-                }
-            }
+        totalWeatherResponse.getPressure()?.let {
+            viewState.setupPressure(it)
         }
     }
 
     private fun setupHumidity(totalWeatherResponse: TotalWeatherResponse) {
-        totalWeatherResponse.weatherListResponse.map { weatherListResponse ->
-            weatherListResponse.mainParametersResponse?.humidity
-        }.let { humidityList ->
-            humidityList.map { humidity ->
-                humidity?.let {
-                    viewState.setupHumidity(it)
-                }
-            }
+        totalWeatherResponse.getHumidity()?.let {
+            viewState.setupHumidity(it)
         }
     }
 
     private fun setupWindSpeed(totalWeatherResponse: TotalWeatherResponse) {
-        totalWeatherResponse.weatherListResponse.map { weatherListResponse ->
-            weatherListResponse.windResponse?.speed
-        }.let { windList ->
-            windList.map { wind ->
-                wind?.let {
-                    viewState.setupWindSpeed(it)
-                }
-            }
+        totalWeatherResponse.getWindSpeed()?.let {
+            viewState.setupWindSpeed(it)
         }
     }
 
     private fun setupSunrise(totalWeatherResponse: TotalWeatherResponse) {
-        totalWeatherResponse.cityResponse?.sunrise
-            ?.let { convertPosixFormatToUtcTime(it) }
-            ?.let { viewState.setupSunrise(it) }
+        totalWeatherResponse.getConvertedSunriseTime()?.let {
+            viewState.setupSunrise(it)
+        }
     }
 
     private fun setupSunset(totalWeatherResponse: TotalWeatherResponse) {
-        totalWeatherResponse.cityResponse?.sunset
-            ?.let { convertPosixFormatToUtcTime(it) }
-            ?.let { viewState.setupSunset(it) }
+        totalWeatherResponse.getConvertedSunsetTime()?.let {
+            viewState.setupSunset(it)
+        }
     }
 
     private fun setupDateTime(totalWeatherResponse: TotalWeatherResponse) {
-//        totalWeatherResponse.list.map { weatherListResponse ->
-//            weatherListResponse.dt
-//                ?.let { convertPosixFormatToUtcDateTime(it) }
-//                ?.let { viewState.setupDateTime(it.toLong()) }
-//        }
+        totalWeatherResponse.getDateTime()?.let {
+            viewState.setupDateTime(it)
+        }
     }
 
-    fun onShowMoreButtonClicked() = viewState.toggleFutureWeatherList()
+    fun onShowMoreButtonClicked() {
+        viewState.toggleFutureWeatherList()
+    }
 
     fun onLayoutRefreshed() {
         runnable = Runnable {
